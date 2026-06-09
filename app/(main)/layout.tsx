@@ -9,7 +9,7 @@ export default function MainLayout({
   return (
     <>
       <Nav />
-      <main className="flex-1 pt-16 pb-12">{children}</main>
+      <main className="flex-1 pt-14 sm:pt-16 pb-[calc(3rem+env(safe-area-inset-bottom))]">{children}</main>
       <CrisisBar />
     </>
   )

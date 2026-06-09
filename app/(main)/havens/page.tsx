@@ -210,17 +210,17 @@ export default function HavensPage() {
           placeholder="Search havens…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-2xl border border-zinc-200 bg-white py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
+          className="w-full rounded-2xl border border-zinc-200 bg-white py-3 pl-10 pr-4 text-base focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
         />
       </div>
 
       {/* Category filters */}
-      <div className="mb-8 flex flex-wrap gap-2">
+      <div className="mb-8 flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden">
         {CATEGORIES.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+            className={`flex-shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
               activeCategory === cat
                 ? 'bg-[#2E5E32] text-white'
                 : 'bg-[#E8F0E9] text-[#2E5E32] hover:bg-[#d0e4d2]'
@@ -265,7 +265,7 @@ export default function HavensPage() {
                   value={newRoom.title}
                   onChange={(e) => setNewRoom((p) => ({ ...p, title: e.target.value }))}
                   placeholder="e.g. Grief after job loss"
-                  className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
+                  className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
                 />
               </div>
               <div>
@@ -278,7 +278,7 @@ export default function HavensPage() {
                   value={newRoom.desc}
                   onChange={(e) => setNewRoom((p) => ({ ...p, desc: e.target.value }))}
                   placeholder="Who is this circle for?"
-                  className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
+                  className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
                 />
               </div>
               <div>
@@ -290,7 +290,7 @@ export default function HavensPage() {
                   onChange={(e) =>
                     setNewRoom((p) => ({ ...p, category: e.target.value }))
                   }
-                  className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
+                  className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
                 >
                   {CATEGORIES.filter((c) => c !== 'All').map((c) => (
                     <option key={c}>{c}</option>

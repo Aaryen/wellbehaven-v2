@@ -45,7 +45,7 @@ export default function HomePage() {
 
       {/* Hero */}
       <section
-        className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-16 text-center text-white"
+        className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-14 sm:pt-16 text-center text-white"
         style={{ background: 'linear-gradient(135deg, #1A3E1E 0%, #2E5E32 60%, #3D7A42 100%)' }}
       >
         <div className="absolute inset-0 bg-black/20" />

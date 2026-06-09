@@ -124,7 +124,7 @@ export default function HavenPage() {
   }
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col">
+    <div className="mx-auto flex h-[calc(100dvh-6rem-env(safe-area-inset-bottom))] sm:h-[calc(100dvh-6.5rem-env(safe-area-inset-bottom))] max-w-2xl flex-col">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[#E8F0E9] px-4 py-4">
         <div className="flex items-center gap-3">

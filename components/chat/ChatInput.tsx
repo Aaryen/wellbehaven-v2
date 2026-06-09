@@ -34,13 +34,13 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
         disabled={disabled}
         placeholder="Share how you're feeling…"
         rows={1}
-        className="flex-1 resize-none rounded-2xl border border-zinc-200 bg-[#FDFAF5] px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30 disabled:opacity-50"
+        className="flex-1 resize-none rounded-2xl border border-zinc-200 bg-[#FDFAF5] px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30 disabled:opacity-50"
         style={{ maxHeight: '120px', overflowY: 'auto' }}
       />
       <button
         onClick={handleSend}
         disabled={disabled || !value.trim()}
-        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-[#2E5E32] text-white transition-colors hover:bg-[#245028] disabled:opacity-40"
+        className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-[#2E5E32] text-white transition-colors hover:bg-[#245028] disabled:opacity-40"
       >
         <Send className="h-4 w-4" />
       </button>

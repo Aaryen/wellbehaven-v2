@@ -371,7 +371,7 @@ export default function HavenRoomPage() {
               onChange={(e) => setJoinName(e.target.value)}
               placeholder="e.g. River, Sage, or anything you like…"
               maxLength={32}
-              className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
+              className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
             />
             <button
               type="submit"
@@ -411,7 +411,7 @@ export default function HavenRoomPage() {
   // ── Main chat layout ─────────────────────────────────────────────────────────
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-6rem)] max-w-3xl flex-col">
+    <div className="mx-auto flex h-[calc(100dvh-6rem-env(safe-area-inset-bottom))] sm:h-[calc(100dvh-6.5rem-env(safe-area-inset-bottom))] max-w-3xl flex-col">
 
       {/* ── Header ── */}
       <div className="relative flex flex-shrink-0 items-center gap-3 border-b border-[#E8F0E9] bg-white px-4 py-3">
@@ -526,7 +526,7 @@ export default function HavenRoomPage() {
             disabled={sending}
             placeholder="Share how you're feeling… (Enter to send)"
             rows={1}
-            className="flex-1 resize-none rounded-2xl border border-zinc-200 bg-[#FDFAF5] px-4 py-3 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30 disabled:opacity-50"
+            className="flex-1 resize-none rounded-2xl border border-zinc-200 bg-[#FDFAF5] px-4 py-3 text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30 disabled:opacity-50"
             style={{ maxHeight: '120px' }}
           />
           <button
@@ -537,7 +537,7 @@ export default function HavenRoomPage() {
             <Send className="h-4 w-4" />
           </button>
         </div>
-        <p className="mt-2 text-center text-xs text-zinc-400">
+        <p className="mt-2 hidden text-center text-xs text-zinc-400 sm:block">
           Shift + Enter for a new line &nbsp;·&nbsp; Enter to send
         </p>
       </div>
