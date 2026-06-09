@@ -1,106 +1,158 @@
+import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, MessageCircle, Shield, Heart } from 'lucide-react'
+import { ArrowRight, Shield, EyeOff, Heart, ChevronDown } from 'lucide-react'
 import Nav from '@/components/layout/Nav'
 
 const testimonials = [
   {
     quote:
-      "I didn't know how to talk about the divorce with anyone who hadn't been through it. Here, everyone just… gets it.",
-    circle: 'Going Through Divorce',
+      "I picked up the phone to call her for 6 months before I stopped trying. Coming here was the first place I felt like that was normal.",
+    name: 'WillowBranch',
+    circle: 'Losing a parent',
   },
   {
     quote:
-      'Grief is so isolating. Finding this circle made me feel less alone at 2am when the sadness hits hardest.',
-    circle: 'Grief & Loss',
+      "Day 31. Some days feel impossibly long. But I'm still here. And this circle reminds me that's enough.",
+    name: 'RisingTide',
+    circle: 'Early sobriety',
   },
   {
     quote:
-      "I was ashamed of how burnt out I felt. Talking to others who felt the same way helped me stop blaming myself.",
-    circle: 'Burnout Recovery',
+      "Two years out and I'm still unlearning what he made me believe about myself. But I'm unlearning them. This group is why.",
+    name: 'QuietDawn',
+    circle: 'Leaving a toxic relationship',
   },
 ]
 
 const steps = [
   {
-    Icon: Shield,
-    title: 'Find your circle',
-    desc: 'Browse circles by what you\'re going through — grief, divorce, anxiety, burnout, and more.',
+    number: '1',
+    title: "Tell us what you're carrying",
+    desc: "One honest answer. Not to judge you — to find your people.",
   },
   {
-    Icon: MessageCircle,
-    title: 'Join anonymously',
-    desc: 'No real names required. Choose your own name and share as much or as little as you want.',
+    number: '2',
+    title: 'Find your SaveHaven',
+    desc: "25 people max. Built around your exact situation, not a general category.",
   },
   {
-    Icon: Heart,
-    title: 'Feel understood',
-    desc: 'Talk to people who\'ve been there. Or chat privately with Haven, your AI companion.',
+    number: '3',
+    title: 'Just show up honestly',
+    desc: "No performance. No advice. Just people who've been where you are.",
   },
 ]
+
+const promises = [
+  { Icon: Shield, text: 'No real names required' },
+  { Icon: EyeOff, text: 'No ads. No data selling.' },
+  { Icon: Heart, text: "Not a substitute for therapy — we're honest about that." },
+]
+
+const serif = { fontFamily: "var(--font-playfair), Georgia, 'Times New Roman', serif" }
 
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Nav />
 
-      {/* Hero */}
-      <section
-        className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-14 sm:pt-16 text-center text-white"
-        style={{ background: 'linear-gradient(135deg, #1A3E1E 0%, #2E5E32 60%, #3D7A42 100%)' }}
-      >
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="relative z-10 mx-auto max-w-2xl space-y-6">
-          <p className="text-xs font-semibold uppercase tracking-widest text-green-300">
-            WellbeHaven
-          </p>
-          <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-            Find the people who
-            <br />
-            already understand.
-          </h1>
-          <p className="mx-auto max-w-lg text-lg leading-relaxed text-green-100 sm:text-xl">
-            Small private circles for people going through divorce, grief, burnout, loss.
-            No strangers. Just people who get it.
-          </p>
-          <div className="flex flex-col justify-center gap-4 pt-2 sm:flex-row">
-            <Link
-              href="/havens"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 font-semibold text-[#2E5E32] transition-colors hover:bg-green-50"
+      {/* ── Hero ──────────────────────────────────────────────────── */}
+      <section className="relative min-h-screen">
+        <Image
+          src="/hero.jpg"
+          alt=""
+          fill
+          className="object-cover object-center"
+          priority
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(22,62,30,0.88) 100%)',
+          }}
+        />
+
+        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 pb-24 pt-14 text-center text-white sm:pt-16">
+          <div className="mx-auto max-w-3xl">
+            <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.25em] text-green-300/80">
+              WellbeHaven
+            </p>
+
+            <h1
+              className="mb-7 font-bold leading-[1.08] tracking-tight text-white"
+              style={{
+                ...serif,
+                fontSize: 'clamp(2.5rem, 6vw, 5rem)',
+              }}
             >
-              Find my SaveHaven <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/haven"
-              className="inline-flex items-center justify-center rounded-2xl border-2 border-white/40 px-6 py-3.5 font-semibold text-white transition-colors hover:bg-white/10"
-            >
-              Talk to Haven privately
-            </Link>
+              Find the people who
+              <br />
+              already understand.
+            </h1>
+
+            <p className="mx-auto mb-10 max-w-[560px] text-lg leading-relaxed text-white/65 sm:text-xl">
+              Small private circles for people going through divorce, grief,
+              burnout, loss. No strangers. Just people who get it.
+            </p>
+
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                href="/havens"
+                className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-2xl bg-white px-8 py-3.5 text-base font-semibold text-[#1A3E1E] shadow-lg transition-all hover:bg-green-50 hover:shadow-xl"
+              >
+                Find my SaveHaven <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/haven"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-2xl border-2 border-white/40 px-8 py-3.5 text-base font-semibold text-white transition-all hover:border-white/70 hover:bg-white/10"
+              >
+                Talk to Haven privately
+              </Link>
+            </div>
           </div>
         </div>
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-30">
-          <div className="mx-auto h-10 w-px rounded bg-white" />
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-white/35">
+          <span className="text-[9px] font-semibold uppercase tracking-[0.25em]">scroll</span>
+          <ChevronDown className="h-5 w-5 animate-bounce" />
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="bg-[#FDFAF5] px-6 py-20">
+      {/* ── Testimonials ──────────────────────────────────────────── */}
+      <section className="bg-[#FDFAF5] px-6 py-20 lg:py-28">
         <div className="mx-auto max-w-5xl">
-          <h2 className="mb-3 text-center text-2xl font-bold text-[#162018] sm:text-3xl">
-            From people like you
-          </h2>
-          <p className="mb-12 text-center text-sm text-zinc-500">
-            All names are anonymous. All stories are real.
-          </p>
+          <div className="mb-14 text-center">
+            <h2
+              className="mb-3 text-3xl font-bold text-[#162018] sm:text-4xl"
+              style={serif}
+            >
+              Words that stayed with us
+            </h2>
+            <p className="text-sm text-zinc-400">
+              All names are anonymous. All stories are real.
+            </p>
+          </div>
+
           <div className="grid gap-6 sm:grid-cols-3">
             {testimonials.map((t, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-[#E8F0E9] bg-white p-6 shadow-sm"
+                className="flex flex-col rounded-2xl bg-white p-7 shadow-sm ring-1 ring-[#E8F0E9] transition-shadow hover:shadow-md"
               >
-                <p className="mb-4 leading-relaxed text-[#162018]">"{t.quote}"</p>
-                <div className="text-sm">
-                  <p className="font-medium text-[#5E9462]">Anonymous</p>
-                  <p className="text-zinc-400">{t.circle} circle</p>
+                <span
+                  className="mb-1 block text-6xl font-bold leading-none text-[#2E5E32]/20"
+                  style={serif}
+                  aria-hidden
+                >
+                  &ldquo;
+                </span>
+                <p className="flex-1 text-sm leading-relaxed text-[#162018]">
+                  {t.quote}
+                </p>
+                <div className="mt-5 border-t border-[#E8F0E9] pt-4">
+                  <p className="text-sm font-semibold text-[#2E5E32]">{t.name}</p>
+                  <p className="text-xs text-zinc-400">{t.circle} circle</p>
                 </div>
               </div>
             ))}
@@ -108,23 +160,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="bg-[#E8F0E9] px-6 py-20">
+      {/* ── How it works ──────────────────────────────────────────── */}
+      <section className="bg-[#E8F0E9] px-6 py-20 lg:py-28">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-12 text-center text-2xl font-bold text-[#162018] sm:text-3xl">
-            How it works
+          <h2
+            className="mb-16 text-center text-3xl font-bold text-[#162018] sm:text-4xl"
+            style={serif}
+          >
+            Three steps to feeling
+            <br className="hidden sm:block" /> genuinely understood
           </h2>
-          <div className="grid gap-10 sm:grid-cols-3">
-            {steps.map(({ Icon, title, desc }, i) => (
-              <div key={i} className="flex flex-col items-center gap-4 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#2E5E32] text-white shadow-md">
-                  <Icon className="h-6 w-6" />
-                </div>
+
+          <div className="grid gap-12 sm:grid-cols-3">
+            {steps.map(({ number, title, desc }) => (
+              <div key={number} className="flex flex-col gap-4">
+                <span
+                  className="text-8xl font-bold leading-none text-[#2E5E32]/15 select-none"
+                  style={serif}
+                  aria-hidden
+                >
+                  {number}
+                </span>
                 <div>
-                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-[#5E9462]">
-                    Step {i + 1}
-                  </p>
-                  <h3 className="mb-2 font-semibold text-[#162018]">{title}</h3>
+                  <h3 className="mb-2 text-base font-semibold text-[#162018]">
+                    {title}
+                  </h3>
                   <p className="text-sm leading-relaxed text-zinc-600">{desc}</p>
                 </div>
               </div>
@@ -133,23 +193,53 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#162018] px-6 py-14 text-green-100">
-        <div className="mx-auto max-w-4xl space-y-4 text-center">
-          <p className="text-lg font-semibold text-white">WellbeHaven</p>
-          <p className="mx-auto max-w-md text-sm text-green-300">
-            If you are in crisis, please call or text{' '}
-            <a href="tel:988" className="font-semibold underline">
-              988
+      {/* ── Privacy promises ──────────────────────────────────────── */}
+      <section className="bg-[#1A3E1E] px-6 py-20">
+        <div className="mx-auto max-w-4xl">
+          <h2
+            className="mb-14 text-center text-3xl font-bold text-white sm:text-4xl"
+            style={serif}
+          >
+            What you share here,
+            <br />
+            stays here.
+          </h2>
+
+          <div className="grid gap-10 sm:grid-cols-3">
+            {promises.map(({ Icon, text }, i) => (
+              <div key={i} className="flex flex-col items-center gap-4 text-center">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/10">
+                  <Icon className="h-6 w-6 text-green-300" />
+                </div>
+                <p className="text-sm font-medium leading-relaxed text-green-100/85">
+                  {text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ────────────────────────────────────────────────── */}
+      <footer className="bg-[#0F2412] px-6 py-10">
+        <div className="mx-auto flex max-w-5xl flex-col items-center gap-5 text-center sm:flex-row sm:justify-between sm:text-left">
+          <p className="text-base font-semibold text-white" style={serif}>
+            WellbeHaven
+          </p>
+
+          <p className="text-xs text-zinc-500">
+            In crisis?{' '}
+            <a href="tel:988" className="font-semibold text-zinc-300 underline">
+              Call or text 988
             </a>{' '}
-            (Suicide &amp; Crisis Lifeline) or text{' '}
-            <a href="sms:741741" className="font-semibold underline">
+            or text{' '}
+            <a href="sms:741741" className="font-semibold text-zinc-300 underline">
               HOME to 741741
             </a>
-            .
           </p>
-          <p className="pt-4 text-xs text-zinc-500">
-            WellbeHaven is not a medical service. We connect people with shared experiences.
+
+          <p className="text-xs text-zinc-600">
+            Not a substitute for therapy or crisis services.
           </p>
         </div>
       </footer>
