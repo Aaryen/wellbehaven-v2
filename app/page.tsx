@@ -43,9 +43,21 @@ const steps = [
 ]
 
 const promises = [
-  { Icon: Shield, text: 'No real names required' },
-  { Icon: EyeOff, text: 'No ads. No data selling.' },
-  { Icon: Heart, text: "Not a substitute for therapy — we're honest about that." },
+  {
+    Icon: Shield,
+    title: 'No real names required',
+    desc: 'You choose who you are here. Nothing has to connect back to you.',
+  },
+  {
+    Icon: EyeOff,
+    title: 'No ads. No data selling.',
+    desc: 'Your pain is not a product. We will never profit from what you share.',
+  },
+  {
+    Icon: Heart,
+    title: 'Honest about our limits',
+    desc: "We're not a substitute for therapy or crisis services — and we'll always tell you that.",
+  },
 ]
 
 const serif = { fontFamily: "var(--font-playfair), Georgia, 'Times New Roman', serif" }
@@ -138,10 +150,10 @@ export default function HomePage() {
             {testimonials.map((t, i) => (
               <div
                 key={i}
-                className="flex flex-col rounded-2xl bg-white p-7 shadow-sm ring-1 ring-[#E8F0E9] transition-shadow hover:shadow-md"
+                className="flex flex-col rounded-2xl bg-[#FAFCFA] p-8 shadow-sm ring-1 ring-[#E8F0E9] transition-shadow hover:shadow-md"
               >
                 <span
-                  className="mb-1 block text-6xl font-bold leading-none text-[#2E5E32]/20"
+                  className="mb-3 block text-7xl font-bold leading-none text-[#5E9462]"
                   style={serif}
                   aria-hidden
                 >
@@ -173,7 +185,7 @@ export default function HomePage() {
 
           <div className="grid gap-12 sm:grid-cols-3">
             {steps.map(({ number, title, desc }) => (
-              <div key={number} className="flex flex-col gap-4">
+              <div key={number} className="flex flex-col gap-4 sm:min-h-[200px]">
                 <span
                   className="text-8xl font-bold leading-none text-[#2E5E32]/15 select-none"
                   style={serif}
@@ -181,7 +193,7 @@ export default function HomePage() {
                 >
                   {number}
                 </span>
-                <div>
+                <div className="flex flex-col">
                   <h3 className="mb-2 text-base font-semibold text-[#162018]">
                     {title}
                   </h3>
@@ -206,14 +218,15 @@ export default function HomePage() {
           </h2>
 
           <div className="grid gap-10 sm:grid-cols-3">
-            {promises.map(({ Icon, text }, i) => (
+            {promises.map(({ Icon, title, desc }, i) => (
               <div key={i} className="flex flex-col items-center gap-4 text-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/10">
                   <Icon className="h-6 w-6 text-green-300" />
                 </div>
-                <p className="text-sm font-medium leading-relaxed text-green-100/85">
-                  {text}
-                </p>
+                <div>
+                  <p className="mb-1.5 text-base font-medium text-white">{title}</p>
+                  <p className="text-sm leading-relaxed text-green-100/60">{desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -229,13 +242,14 @@ export default function HomePage() {
 
           <p className="text-xs text-zinc-500">
             In crisis?{' '}
-            <a href="tel:988" className="font-semibold text-zinc-300 underline">
-              Call or text 988
+            <a href="tel:08000113" className="font-semibold text-zinc-300 underline">
+              0800-0113
             </a>{' '}
-            or text{' '}
-            <a href="sms:741741" className="font-semibold text-zinc-300 underline">
-              HOME to 741741
-            </a>
+            (NL) ·{' '}
+            <a href="tel:988" className="font-semibold text-zinc-300 underline">
+              988
+            </a>{' '}
+            (US)
           </p>
 
           <p className="text-xs text-zinc-600">
