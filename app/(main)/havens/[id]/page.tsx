@@ -91,10 +91,10 @@ function MessageBubble({
         </div>
         <div className="max-w-[75%] sm:max-w-[65%]">
           <p className="mb-1 text-xs font-semibold text-[#2E5E32]">{message.username}</p>
-          <div className="rounded-2xl rounded-tl-sm border border-[#c8e6ca] bg-[#F0FAF0] px-4 py-3 text-sm leading-relaxed text-[#162018] shadow-sm">
+          <div className="rounded-2xl rounded-tl-sm border border-[#c8e6ca] bg-[#E8F0E9] px-4 py-3 text-sm italic leading-relaxed text-[#162018] shadow-sm">
             {message.content}
           </div>
-          <p className="mt-1 text-xs text-zinc-400">{timeAgo(message.createdAt)}</p>
+          <p className="mt-1 text-right text-xs text-zinc-400">{timeAgo(message.createdAt)}</p>
         </div>
       </div>
     )
@@ -112,15 +112,15 @@ function MessageBubble({
           {isOwn ? 'You' : message.username}
         </p>
         <div
-          className={`rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${
+          className={`rounded-2xl bg-white px-4 py-3 text-sm leading-relaxed text-[#162018] shadow-sm ${
             isOwn
-              ? 'rounded-tr-sm bg-[#2E5E32] text-white'
-              : 'rounded-tl-sm border border-zinc-100 bg-white text-[#162018]'
+              ? 'rounded-tr-sm border border-[#2E5E32]/30'
+              : 'rounded-tl-sm border border-zinc-100'
           }`}
         >
           {message.content}
         </div>
-        <p className="mt-1 text-xs text-zinc-400">{timeAgo(message.createdAt)}</p>
+        <p className="mt-1 self-stretch text-right text-xs text-zinc-400">{timeAgo(message.createdAt)}</p>
       </div>
     </div>
   )
@@ -370,9 +370,11 @@ export default function HavenRoomPage() {
         </div>
 
         {room && (
-          <div className="flex items-center gap-1 rounded-full bg-[#E8F0E9] px-2.5 py-1 text-xs font-medium text-[#2E5E32]">
+          <div className="flex items-center gap-1.5 rounded-full bg-[#E8F0E9] px-2.5 py-1 text-xs font-medium text-[#2E5E32]">
             <Users className="h-3 w-3" />
-            {room.members}
+            <span>
+              {room.members} <span className="hidden sm:inline">members reading</span>
+            </span>
           </div>
         )}
 
@@ -448,7 +450,7 @@ export default function HavenRoomPage() {
 
       {/* ── Input bar ── */}
       <div className="flex-shrink-0 border-t border-[#E8F0E9] bg-white px-4 py-3">
-        <div className="flex items-end gap-2">
+        <div className="flex items-end gap-2 rounded-[28px] border border-zinc-200 bg-[#FDFAF5] py-1.5 pl-4 pr-1.5 transition-shadow focus-within:ring-2 focus-within:ring-[#2E5E32]/30">
           <textarea
             ref={textareaRef}
             value={input}
@@ -457,13 +459,13 @@ export default function HavenRoomPage() {
             disabled={sending || !username}
             placeholder={username ? 'Share how you\'re feeling… (Enter to send)' : 'Set a username to join the conversation'}
             rows={1}
-            className="flex-1 resize-none rounded-2xl border border-zinc-200 bg-[#FDFAF5] px-4 py-3 text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30 disabled:opacity-50"
+            className="flex-1 resize-none bg-transparent py-2 text-base leading-relaxed focus:outline-none disabled:opacity-50"
             style={{ maxHeight: '120px' }}
           />
           <button
             onClick={() => void handleSend()}
             disabled={!input.trim() || sending || !username}
-            className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-[#2E5E32] text-white transition-colors hover:bg-[#245028] disabled:opacity-40"
+            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#2E5E32] text-white transition-colors hover:bg-[#245028] disabled:opacity-40"
           >
             <Send className="h-4 w-4" />
           </button>

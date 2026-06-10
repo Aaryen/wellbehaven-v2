@@ -1,12 +1,24 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Search, Plus, X } from 'lucide-react'
-import RoomList from '@/components/havens/RoomList'
+import Link from 'next/link'
+import { Search, Plus, X, Users, ArrowRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { Room } from '@/types'
 
 const CATEGORIES = ['All', 'Divorce', 'Grief', 'Anxiety', 'Burnout', 'Loneliness', 'Trauma']
+
+const CATEGORY_EMOJI: Record<string, string> = {
+  Divorce: '💔',
+  Grief: '🕯️',
+  Anxiety: '🌊',
+  Burnout: '🔥',
+  Loneliness: '🌙',
+  Trauma: '🫂',
+}
+
+const CARD_BORDER = '#5E9462'
+const CARD_BG = 'rgba(94,148,98,0.12)'
 
 const SEED_ROOMS = [
   {
@@ -92,6 +104,123 @@ function mapRoom(row: Record<string, unknown>): Room {
     weeklyPrompt: (row.weekly_prompt as string) ?? '',
     createdAt: row.created_at as string,
   }
+}
+
+function HavenCard({
+  room,
+  isExpanded,
+  onToggle,
+}: {
+  room: Room
+  isExpanded: boolean
+  onToggle: () => void
+}) {
+  const emoji = CATEGORY_EMOJI[room.category] ?? '🌿'
+  const fillPct = Math.min(100, Math.round((room.members / room.capacity) * 100))
+
+  return (
+    <div
+      onClick={onToggle}
+      className="cursor-pointer bg-white sm:cursor-default"
+      style={{
+        borderRadius: 16,
+        boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04)',
+        borderLeft: `4px solid ${CARD_BORDER}`,
+        padding: '1.25rem 1.25rem 1.25rem 1.125rem',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget
+        el.style.transform = 'translateY(-3px)'
+        el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.11), 0 0 0 1px rgba(0,0,0,0.05)'
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget
+        el.style.transform = 'translateY(0)'
+        el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04)'
+      }}
+    >
+      {/* Emoji avatar + title row */}
+      <div className="flex items-start gap-3">
+        <div
+          className="flex flex-shrink-0 items-center justify-center rounded-full"
+          style={{
+            width: 48,
+            height: 48,
+            backgroundColor: CARD_BG,
+            fontSize: '1.5rem',
+            lineHeight: 1,
+          }}
+        >
+          {emoji}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <span
+            className="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium"
+            style={{ backgroundColor: CARD_BG, color: CARD_BORDER }}
+          >
+            {room.category}
+          </span>
+          <h3
+            className="mt-1.5 leading-snug text-[#162018]"
+            style={{ fontSize: '1.1rem', fontWeight: 700 }}
+          >
+            {room.title}
+          </h3>
+        </div>
+      </div>
+
+      {/* Description */}
+      <p
+        className={`mt-3 ${isExpanded ? '' : 'line-clamp-2'}`}
+        style={{ fontSize: '0.82rem', color: '#6A8070', marginBottom: '0.75rem', lineHeight: 1.55 }}
+      >
+        {room.desc}
+      </p>
+
+      {/* Weekly prompt */}
+      {room.weeklyPrompt && (
+        <p
+          className="italic"
+          style={{ fontSize: '0.78rem', color: '#5E9462', marginBottom: '1rem' }}
+        >
+          📌 &ldquo;{room.weeklyPrompt}&rdquo;
+        </p>
+      )}
+
+      {/* Member bar */}
+      <div
+        className="overflow-hidden rounded-full bg-zinc-100"
+        style={{ height: 4, marginBottom: '0.75rem' }}
+      >
+        <div
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${fillPct}%`, backgroundColor: CARD_BORDER }}
+        />
+      </div>
+
+      {/* Footer */}
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-1.5 text-xs text-zinc-400">
+          <Users className="h-3.5 w-3.5" />
+          {room.members} / {room.capacity} members
+        </span>
+        <Link
+          href={`/havens/${room.id}`}
+          onClick={(e) => e.stopPropagation()}
+          className={`items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold text-white transition-colors ${
+            isExpanded ? 'inline-flex' : 'hidden sm:inline-flex'
+          }`}
+          style={{ backgroundColor: '#2E5E32' }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#245028' }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#2E5E32' }}
+        >
+          Enter Circle <ArrowRight className="h-3 w-3" />
+        </Link>
+      </div>
+    </div>
+  )
 }
 
 export default function HavensPage() {
@@ -238,8 +367,21 @@ export default function HavensPage() {
             <div key={i} className="h-48 animate-pulse rounded-2xl bg-[#E8F0E9]" />
           ))}
         </div>
+      ) : filtered.length === 0 ? (
+        <p className="py-12 text-center text-sm text-zinc-400">No havens found.</p>
       ) : (
-        <RoomList rooms={filtered} expandedId={expandedId} onToggle={setExpandedId} />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((room) => (
+            <HavenCard
+              key={room.id}
+              room={room}
+              isExpanded={expandedId === room.id}
+              onToggle={() =>
+                setExpandedId((prev) => (prev === room.id ? null : room.id))
+              }
+            />
+          ))}
+        </div>
       )}
 
       {/* New Room Modal */}
