@@ -61,6 +61,7 @@ export default function Nav() {
           >
             SaveHavens
           </Link>
+
           <Link
             href="/haven"
             className={`flex min-h-[44px] items-center rounded-2xl px-4 text-sm font-medium transition-all duration-300 ${

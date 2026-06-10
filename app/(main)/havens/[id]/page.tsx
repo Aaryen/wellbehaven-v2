@@ -148,10 +148,9 @@ function TypingIndicator() {
 export default function HavenRoomPage() {
   const { id: roomId } = useParams<{ id: string }>()
 
+  const [username, setUsername] = useState<string | null>(null)
   const [room, setRoom] = useState<Room | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
-  const [username, setUsername] = useState<string | null>(null)
-  const [joinName, setJoinName] = useState('')
   const [havenTyping, setHavenTyping] = useState(false)
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
@@ -165,20 +164,9 @@ export default function HavenRoomPage() {
   const supabaseRef = useRef(createClient())
   const didInitialScroll = useRef(false)
 
-  const [userId] = useState<string>(() => {
-    if (typeof window === 'undefined') return 'ssr'
-    const key = 'wbh_userid'
-    const stored = localStorage.getItem(key)
-    if (stored) return stored
-    const id = crypto.randomUUID()
-    localStorage.setItem(key, id)
-    return id
-  })
-
-  // Restore username
+  // Read username from localStorage
   useEffect(() => {
-    const name = localStorage.getItem('wbh_username')
-    if (name) setUsername(name)
+    setUsername(localStorage.getItem('wbh_username'))
   }, [])
 
   // Load room + messages
@@ -248,7 +236,6 @@ export default function HavenRoomPage() {
   useEffect(() => {
     if (loading) return
     if (!didInitialScroll.current) {
-      // Instant on first load
       if (messagesAreaRef.current) {
         messagesAreaRef.current.scrollTop = messagesAreaRef.current.scrollHeight
       }
@@ -257,14 +244,6 @@ export default function HavenRoomPage() {
       endRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
   }, [messages, havenTyping, loading])
-
-  function handleJoin(e: React.FormEvent) {
-    e.preventDefault()
-    const name = joinName.trim()
-    if (!name) return
-    localStorage.setItem('wbh_username', name)
-    setUsername(name)
-  }
 
   function handleInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setInput(e.target.value)
@@ -282,7 +261,7 @@ export default function HavenRoomPage() {
 
   async function handleSend() {
     const content = input.trim()
-    if (!content || !username || sending) return
+    if (!content || sending || !username) return
 
     setInput('')
     if (textareaRef.current) textareaRef.current.style.height = 'auto'
@@ -291,7 +270,7 @@ export default function HavenRoomPage() {
     try {
       const { error: insertErr } = await supabaseRef.current.from('messages').insert({
         room_id: roomId,
-        user_id: userId,
+        user_id: 'anonymous',
         username,
         content,
         is_haven: false,
@@ -312,7 +291,6 @@ export default function HavenRoomPage() {
   async function callHaven(userContent: string) {
     setHavenTyping(true)
     try {
-      // Build context from last 10 messages, always ending with a user turn
       const context = messages
         .slice(-10)
         .map((m) => ({
@@ -322,7 +300,6 @@ export default function HavenRoomPage() {
 
       context.push({ role: 'user', content: `[${username}]: ${userContent}` })
 
-      // Anthropic requires the first message to be role 'user'
       const firstUser = context.findIndex((m) => m.role === 'user')
       const apiMessages = firstUser > 0 ? context.slice(firstUser) : context
 
@@ -349,49 +326,7 @@ export default function HavenRoomPage() {
     }
   }
 
-  // ── Join modal ──────────────────────────────────────────────────────────────
-
-  if (!username) {
-    return (
-      <div className="flex min-h-[80vh] items-center justify-center px-4">
-        <div className="w-full max-w-sm rounded-2xl border border-[#E8F0E9] bg-white p-8 shadow-sm">
-          <p className="mb-4 text-center text-3xl">🌿</p>
-          <h2 className="mb-1 text-center text-xl font-semibold text-[#162018]">
-            {room?.title ?? 'Join this circle'}
-          </h2>
-          <p className="mb-6 text-center text-sm leading-relaxed text-zinc-500">
-            Choose an anonymous name to join. Nothing real required — just something
-            you&apos;re comfortable with.
-          </p>
-          <form onSubmit={handleJoin} className="space-y-3">
-            <input
-              required
-              autoFocus
-              value={joinName}
-              onChange={(e) => setJoinName(e.target.value)}
-              placeholder="e.g. River, Sage, or anything you like…"
-              maxLength={32}
-              className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
-            />
-            <button
-              type="submit"
-              className="w-full rounded-xl bg-[#2E5E32] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#245028]"
-            >
-              Enter circle
-            </button>
-          </form>
-          <Link
-            href="/havens"
-            className="mt-4 block text-center text-xs text-zinc-400 hover:text-zinc-600"
-          >
-            ← Back to circles
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  // ── Error state ─────────────────────────────────────────────────────────────
+  // ── Error state ──────────────────────────────────────────────────────────────
 
   if (loadError) {
     return (
@@ -426,7 +361,7 @@ export default function HavenRoomPage() {
           <h1 className="truncate font-semibold text-[#162018]">
             {room?.title ?? '…'}
           </h1>
-          {room && (
+          {room && username && (
             <p className="text-xs text-zinc-400">
               Joined as{' '}
               <span className="font-medium text-[#2E5E32]">{username}</span>
@@ -434,7 +369,6 @@ export default function HavenRoomPage() {
           )}
         </div>
 
-        {/* Member count */}
         {room && (
           <div className="flex items-center gap-1 rounded-full bg-[#E8F0E9] px-2.5 py-1 text-xs font-medium text-[#2E5E32]">
             <Users className="h-3 w-3" />
@@ -442,7 +376,6 @@ export default function HavenRoomPage() {
           </div>
         )}
 
-        {/* Weekly prompt button */}
         {room?.weeklyPrompt && (
           <div className="relative">
             <button
@@ -455,12 +388,10 @@ export default function HavenRoomPage() {
 
             {showPrompt && (
               <>
-                {/* backdrop */}
                 <div
                   className="fixed inset-0 z-10"
                   onClick={() => setShowPrompt(false)}
                 />
-                {/* popover */}
                 <div className="absolute right-0 top-10 z-20 w-72 rounded-2xl border border-[#E8F0E9] bg-white p-4 shadow-lg">
                   <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-[#5E9462]">
                     This week&apos;s prompt
@@ -506,7 +437,7 @@ export default function HavenRoomPage() {
               <MessageBubble
                 key={msg.id}
                 message={msg}
-                isOwn={msg.userId === userId}
+                isOwn={msg.username === username}
               />
             ))}
             {havenTyping && <TypingIndicator />}
@@ -523,15 +454,15 @@ export default function HavenRoomPage() {
             value={input}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            disabled={sending}
-            placeholder="Share how you're feeling… (Enter to send)"
+            disabled={sending || !username}
+            placeholder={username ? 'Share how you\'re feeling… (Enter to send)' : 'Set a username to join the conversation'}
             rows={1}
             className="flex-1 resize-none rounded-2xl border border-zinc-200 bg-[#FDFAF5] px-4 py-3 text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30 disabled:opacity-50"
             style={{ maxHeight: '120px' }}
           />
           <button
             onClick={() => void handleSend()}
-            disabled={!input.trim() || sending}
+            disabled={!input.trim() || sending || !username}
             className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-[#2E5E32] text-white transition-colors hover:bg-[#245028] disabled:opacity-40"
           >
             <Send className="h-4 w-4" />
