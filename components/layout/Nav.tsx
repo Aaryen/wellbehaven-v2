@@ -66,7 +66,7 @@ export default function Nav() {
             className={`flex min-h-[44px] items-center rounded-2xl px-4 text-sm font-medium transition-all duration-300 ${
               transparent
                 ? 'border border-white/40 bg-white/15 text-white hover:bg-white/25 hover:border-white/60'
-                : 'bg-[#2E5E32] text-white hover:bg-[#245028]'
+                : 'border border-transparent bg-[#2E5E32] text-white hover:bg-[#245028]'
             }`}
           >
             Haven

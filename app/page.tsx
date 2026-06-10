@@ -64,7 +64,7 @@ const serif = { fontFamily: "var(--font-playfair), Georgia, 'Times New Roman', s
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div>
       <Nav />
 
       {/* ── Hero ──────────────────────────────────────────────────── */}
