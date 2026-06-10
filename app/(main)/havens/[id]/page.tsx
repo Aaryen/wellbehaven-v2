@@ -149,6 +149,8 @@ export default function HavenRoomPage() {
   const { id: roomId } = useParams<{ id: string }>()
 
   const [username, setUsername] = useState<string | null>(null)
+  const [showUsernameModal, setShowUsernameModal] = useState(false)
+  const [pendingUsername, setPendingUsername] = useState('')
   const [room, setRoom] = useState<Room | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [havenTyping, setHavenTyping] = useState(false)
@@ -259,9 +261,25 @@ export default function HavenRoomPage() {
     }
   }
 
+  function handleFocusInput() {
+    if (!username) setShowUsernameModal(true)
+  }
+
+  function handleSaveUsername(e: React.FormEvent) {
+    e.preventDefault()
+    const name = pendingUsername.trim()
+    if (!name) return
+    localStorage.setItem('wbh_username', name)
+    setUsername(name)
+    setShowUsernameModal(false)
+    setPendingUsername('')
+    setTimeout(() => textareaRef.current?.focus(), 50)
+  }
+
   async function handleSend() {
+    if (!username) { setShowUsernameModal(true); return }
     const content = input.trim()
-    if (!content || sending || !username) return
+    if (!content || sending) return
 
     setInput('')
     if (textareaRef.current) textareaRef.current.style.height = 'auto'
@@ -448,6 +466,40 @@ export default function HavenRoomPage() {
         )}
       </div>
 
+      {/* ── Username modal ── */}
+      {showUsernameModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowUsernameModal(false)} />
+          <div className="relative z-10 w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl">
+            <div className="mb-6 text-center">
+              <p className="mb-2 text-3xl">🌱</p>
+              <h2 className="text-xl font-semibold text-[#162018]">Choose your name</h2>
+              <p className="mt-1.5 text-sm text-zinc-500">
+                This is how you&apos;ll appear in the circle.<br />Anonymous names are welcome.
+              </p>
+            </div>
+            <form onSubmit={handleSaveUsername} className="space-y-3">
+              <input
+                autoFocus
+                required
+                value={pendingUsername}
+                onChange={(e) => setPendingUsername(e.target.value)}
+                placeholder="e.g. River, Sage, Willow…"
+                maxLength={32}
+                className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-[#2E5E32]/30"
+              />
+              <button
+                type="submit"
+                disabled={!pendingUsername.trim()}
+                className="w-full rounded-xl bg-[#2E5E32] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#245028] disabled:opacity-50"
+              >
+                Enter Circle →
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* ── Input bar ── */}
       <div className="flex-shrink-0 border-t border-[#E8F0E9] bg-white px-4 py-3">
         <div className="flex items-end gap-2 rounded-[28px] border border-zinc-200 bg-[#FDFAF5] py-1.5 pl-4 pr-1.5 transition-shadow focus-within:ring-2 focus-within:ring-[#2E5E32]/30">
@@ -456,8 +508,9 @@ export default function HavenRoomPage() {
             value={input}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            disabled={sending || !username}
-            placeholder={username ? 'Share how you\'re feeling… (Enter to send)' : 'Set a username to join the conversation'}
+            onFocus={handleFocusInput}
+            disabled={sending}
+            placeholder={username ? 'Share how you\'re feeling… (Enter to send)' : 'Choose a name to join the conversation…'}
             rows={1}
             className="flex-1 resize-none bg-transparent py-2 text-base leading-relaxed focus:outline-none disabled:opacity-50"
             style={{ maxHeight: '120px' }}
